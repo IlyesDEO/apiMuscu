@@ -11,6 +11,7 @@ app
 .use(morgan('dev'))
 
 require('./src/routes/exoMuscu')(app)
+require('./src/routes/login')(app)
 sequelize.initDb()
 app.use(({res}) => {
     const message = "impossible de trouver la ressource demandée"

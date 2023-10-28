@@ -1,12 +1,12 @@
 const { Exo } = require('../db/sequelize')
-const exo = require('../models/exo')
-
+const {exo} = require('../models/exo')
+const auth = require('../auth/auth')
 
 module.exports = (app) => {
 
 app.get('/', (req,res) => res.send('Bienvenue sur ma première api en node, symfony ça reste mieux !'))
 
-  app.get('/api/exo', (req, res) => {
+  app.get('/api/exo', auth, (req, res) => {
     Exo.findAll()
       .then(exo => {
         const message = 'La liste des exercices a bien été récupérée.'
@@ -14,7 +14,7 @@ app.get('/', (req,res) => res.send('Bienvenue sur ma première api en node, symf
       })
   })
 
-  app.get('/api/exo/:id', (req,res) => {
+  app.get('/api/exo/:id', auth, (req,res) => {
     Exo.findByPk(req.params.id)
     .then(exo => {
       const message = `L'exercice à bien été trouvé.`
@@ -22,7 +22,7 @@ app.get('/', (req,res) => res.send('Bienvenue sur ma première api en node, symf
     })
   })
 
-  app.post('/api/exo', (req, res) => {
+  app.post('/api/exo', auth, (req, res) => {
     Exo.create(req.body)
       .then(exo => {
         const message = `L'exo ${req.body.name} a bien été crée.`
@@ -34,7 +34,7 @@ app.get('/', (req,res) => res.send('Bienvenue sur ma première api en node, symf
     })
   })
 
-  app.put('/api/exo/:id', (req, res) => {
+  app.put('/api/exo/:id', auth, (req, res) => {
     const id = req.params.id
     Exo.update(req.body, {
       where: { id: id }
@@ -47,7 +47,7 @@ app.get('/', (req,res) => res.send('Bienvenue sur ma première api en node, symf
     })
   })
 
-  app.delete('/api/exo/:id', (req, res) => {
+  app.delete('/api/exo/:id', auth, (req, res) => {
     Exo.findByPk(req.params.id).then(exo => {
       const exoDeleted = exo;
       Exo.destroy({
