@@ -17,21 +17,19 @@ const Exo = ExoModel(sequelize, DataTypes)
 const User = UserModel(sequelize, DataTypes)
 
   
-const initDb = () => {
-  return sequelize.sync({force: true}).then(_ => {
-    exo.map(exo => {
-      Exo.create({
-        name: exo.name,
-        nbSeries: exo.nbSeries,
-        nbRep: exo.nbRep,
-      }).then(exo => console.log(exo.toJSON()))
-    })
-      bcrypt.hash('root', 10)
-      .then(hash => User.create({ username: 'ilyes',  password: hash}))
-       .then(user => console.log(user.toJSON()))
+const initDb = async () => {
 
-      console.log('La base de donnée a bien été initialisée')
-  })
+  await sequelize.sync({force: true})
+  for(let e of exo){
+  await Exo.create({
+      name: e.name,
+      nbSeries: e.nbSeries,
+      nbRep: e.nbRep,
+    })
+   }
+  const hash = await bcrypt.hash('root', 10)
+  User.create({username: 'ilyes',  password: hash})
+   
 }
   
 module.exports = { 

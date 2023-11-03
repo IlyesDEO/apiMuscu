@@ -6,13 +6,23 @@ module.exports = (app) => {
 
 app.get('/', (req,res) => res.send('Bienvenue sur ma première api en node, symfony ça reste mieux !'))
 
-  app.get('/api/exo', auth, (req, res) => {
-    Exo.findAll()
-      .then(exo => {
-        const message = 'La liste des exercices a bien été récupérée.'
-        res.json({ message, data: exo })
-      })
-  })
+let cachedData = null;
+
+app.get('/api/exo', auth, async (req, res) => {
+  try{
+    if (cachedData) {
+      const message = 'La liste des exercices a été renvoyée à partir du cache.';
+      res.json({ message, data: cachedData });
+    } else {
+      const exo = await Exo.findAll()
+      const message = 'La liste des exercices a bien été récupérée.';
+      cachedData = exo;
+      res.json({ message, data: exo });
+    }
+  }catch(e){
+    res.status(500).json({ error: 'Une erreur s\'est produite.' });
+  }
+});
 
   app.get('/api/exo/:id', auth, (req,res) => {
     Exo.findByPk(req.params.id)

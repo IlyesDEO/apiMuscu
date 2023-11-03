@@ -13,9 +13,12 @@ app
 require('./src/routes/exoMuscu')(app)
 require('./src/routes/login')(app)
 sequelize.initDb()
-app.use(({res}) => {
+/*app.use(({res}) => {
     const message = "impossible de trouver la ressource demandée"
     res.status(404).json({message})
-})
+})*/
+
 
 app.listen(port, () => console.log(`Lancement de l'api sur sur : http//localhost:${port}`))
+
+module.exports = app;
